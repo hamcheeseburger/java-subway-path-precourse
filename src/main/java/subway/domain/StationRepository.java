@@ -23,4 +23,19 @@ public class StationRepository {
     public static void deleteAll() {
         stations.clear();
     }
+
+    public void checkExist(String name) {
+        Station station = searchStation(name);
+        if(station == null) {
+            throw new IllegalArgumentException("[ERROR] 존재하지 않는 역입니다.");
+        }
+    }
+
+    public Station searchStation(String name) {
+        return stations
+            .stream().filter(s -> s.equals(name))
+            .findAny()
+            .orElse(null);
+
+    }
 }

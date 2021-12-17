@@ -2,7 +2,10 @@ package subway.domain;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
+import lombok.Getter;
 
+@Getter
 public class Result {
     int distance;
     int time;
@@ -12,14 +15,5 @@ public class Result {
         this.distance = distance;
         this.time = time;
         this.nodes = nodes;
-    }
-
-    @Override
-    public String toString() {
-        return "Result{" +
-            "distance=" + distance +
-            ", time=" + time +
-            ", nodes=" + nodes +
-            '}';
     }
 }
