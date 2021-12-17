@@ -65,12 +65,50 @@ public class MainController {
     }
 
     private void doDistance() {
-        Result result = graphRepository.getShortestPath(InputView.getStart(), InputView.getEnd());
-        OutputView.printResult(result);
+        try {
+            Result result = graphRepository.getShortestPath(getStart(),
+                getEnd());
+            OutputView.printResult(result);
+        } catch (IllegalArgumentException e) {
+            System.out.print(e.getMessage());
+        }
     }
 
     private void doTime() {
-        Result result = graphRepository.getShortestTime(InputView.getStart(), InputView.getEnd());
-        OutputView.printResult(result);
+        try {
+            Result result = graphRepository.getShortestTime(getStart(),
+                    getEnd());
+            OutputView.printResult(result);
+        } catch (IllegalArgumentException e) {
+            System.out.print(e.getMessage());
+        }
+    }
+
+    private String getStart() {
+        while(true) {
+            String start = InputView.getStart();
+            if(checkExist(start)) {
+                return start;
+            }
+        }
+    }
+
+    private String getEnd() {
+        while(true) {
+            String end = InputView.getEnd();
+            if(checkExist(end)) {
+                return end;
+            }
+        }
+    }
+
+    private boolean checkExist(String name) {
+        try {
+            StationRepository.checkExist(name);
+            return true;
+        }catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+        return false;
     }
 }

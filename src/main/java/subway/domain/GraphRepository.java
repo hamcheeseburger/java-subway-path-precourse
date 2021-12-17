@@ -34,11 +34,9 @@ public class GraphRepository {
 
     private void initEdges() {
         for(Info info : InfoRepository.infos()) {
-            System.out.println(info.getStart() + "," + info.getEnd() + "," + info.getDistance() + "," + info.getTime());
             distanceGraph.setEdgeWeight(distanceGraph.addEdge(info.getStart(), info.getEnd()), info.getDistance());
             timeGraph.setEdgeWeight(timeGraph.addEdge(info.getStart(), info.getEnd()), info.getTime());
         }
-
     }
 
     private void initPaths() {
@@ -47,17 +45,29 @@ public class GraphRepository {
     }
 
     public Result getShortestPath(String start, String end) {
+        validateStartAndEnd(start, end);
         try {
             List<String> nodes = distanceShortest.getPath(start, end).getVertexList();
             return calculate(nodes);
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("[ERROR] 경로를 찾을 수 없습니다.");
         }
     }
 
     public Result getShortestTime(String start, String end) {
-        List<String> nodes = timeShortest.getPath(start, end).getVertexList();
-        return calculate(nodes);
+        validateStartAndEnd(start, end);
+        try {
+            List<String> nodes = timeShortest.getPath(start, end).getVertexList();
+            return calculate(nodes);
+        }catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("[ERROR] 경로를 찾을 수 없습니다.");
+        }
+    }
+
+    private void validateStartAndEnd(String start, String end) {
+        if(start.equals(end)) {
+            throw new IllegalArgumentException("[ERROR] 출발지와 도착지는 동일할 수 없습니다.");
+        }
     }
 
     private Result calculate(List<String> nodes) {

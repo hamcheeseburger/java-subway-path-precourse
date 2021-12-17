@@ -12,7 +12,7 @@ public class OutputView {
         System.out.println("[INFO] 총 소요 시간: " + result.getTime() + "분");
         System.out.println("[INFO] ---");
         for(String node : result.getNodes()) {
-            System.out.println("[INFO]" + node);
+            System.out.println("[INFO] " + node);
         }
     }
 }

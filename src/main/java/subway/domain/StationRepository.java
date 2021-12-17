@@ -24,18 +24,19 @@ public class StationRepository {
         stations.clear();
     }
 
-    public void checkExist(String name) {
+    public static void checkExist(String name) {
         Station station = searchStation(name);
+
         if(station == null) {
             throw new IllegalArgumentException("[ERROR] 존재하지 않는 역입니다.");
         }
+//        System.out.println(station.getName() + "found");
     }
 
-    public Station searchStation(String name) {
+    public static Station searchStation(String name) {
         return stations
-            .stream().filter(s -> s.equals(name))
+            .stream().filter(s -> s.getName().equals(name))
             .findAny()
             .orElse(null);
-
     }
 }
