@@ -2,6 +2,7 @@ package subway.view;
 
 import java.util.logging.Logger;
 import subway.domain.Result;
+import subway.domain.Station;
 
 public class OutputView {
     public static void printResult(Result result) {

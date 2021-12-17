@@ -12,55 +12,47 @@ public class GraphRepository {
     private DijkstraShortestPath timeShortest;
 
     public GraphRepository() {
-        initGraph();
+        init();
     }
 
-    public void initGraph() {
-        initDistanceGraph();
-        initTimeGraph();
+    public void init() {
+        initGraphs();
+        initEdges();
+        initPaths();
     }
 
-    private void initDistanceGraph() {
+    private void initGraphs() {
         distanceGraph = new WeightedMultigraph(DefaultWeightedEdge.class);
         for(Station station : StationRepository.stations()) {
             distanceGraph.addVertex(station.getName());
         }
-        initDistanceEdges();
-        distanceShortest = new DijkstraShortestPath(distanceGraph);
-    }
-
-    private void initDistanceEdges() {
-        distanceGraph.setEdgeWeight(distanceGraph.addEdge("교대역", "강남역"), 2);
-        distanceGraph.setEdgeWeight(distanceGraph.addEdge("강남역", "역삼역"), 2);
-        distanceGraph.setEdgeWeight(distanceGraph.addEdge("교대역", "남부터미널역"), 3);
-        distanceGraph.setEdgeWeight(distanceGraph.addEdge("남부터미널역", "양재역"), 6);
-        distanceGraph.setEdgeWeight(distanceGraph.addEdge("양재역", "매봉역"), 1);
-        distanceGraph.setEdgeWeight(distanceGraph.addEdge("강남역", "양재역"), 2);
-        distanceGraph.setEdgeWeight(distanceGraph.addEdge("양재역", "양재시민의숲역"), 10);
-    }
-
-    private void initTimeGraph() {
         timeGraph = new WeightedMultigraph(DefaultWeightedEdge.class);
         for(Station station : StationRepository.stations()) {
             timeGraph.addVertex(station.getName());
         }
-        initTimeEdges();
+    }
+
+    private void initEdges() {
+        for(Info info : InfoRepository.infos()) {
+            System.out.println(info.getStart() + "," + info.getEnd() + "," + info.getDistance() + "," + info.getTime());
+            distanceGraph.setEdgeWeight(distanceGraph.addEdge(info.getStart(), info.getEnd()), info.getDistance());
+            timeGraph.setEdgeWeight(timeGraph.addEdge(info.getStart(), info.getEnd()), info.getTime());
+        }
+
+    }
+
+    private void initPaths() {
+        distanceShortest = new DijkstraShortestPath(distanceGraph);
         timeShortest = new DijkstraShortestPath(timeGraph);
     }
 
-    private void initTimeEdges() {
-        timeGraph.setEdgeWeight(timeGraph.addEdge("교대역", "강남역"), 3);
-        timeGraph.setEdgeWeight(timeGraph.addEdge("강남역", "역삼역"), 3);
-        timeGraph.setEdgeWeight(timeGraph.addEdge("교대역", "남부터미널역"), 2);
-        timeGraph.setEdgeWeight(timeGraph.addEdge("남부터미널역", "양재역"), 5);
-        timeGraph.setEdgeWeight(timeGraph.addEdge("양재역", "매봉역"), 1);
-        timeGraph.setEdgeWeight(timeGraph.addEdge("강남역", "양재역"), 8);
-        timeGraph.setEdgeWeight(timeGraph.addEdge("양재역", "양재시민의숲역"), 3);
-    }
-
     public Result getShortestPath(String start, String end) {
-        List<String> nodes = distanceShortest.getPath(start, end).getVertexList();
-        return calculate(nodes);
+        try {
+            List<String> nodes = distanceShortest.getPath(start, end).getVertexList();
+            return calculate(nodes);
+        } catch (Exception e) {
+            throw new IllegalArgumentException("[ERROR] 경로를 찾을 수 없습니다.");
+        }
     }
 
     public Result getShortestTime(String start, String end) {

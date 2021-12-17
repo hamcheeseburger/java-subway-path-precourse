@@ -9,19 +9,16 @@ import subway.view.InputView;
 import subway.view.OutputView;
 
 public class MainController {
-    private String [] lines = {"2호선", "3호선", "신분당선"};
-    private String [] stationNames = {"교대역", "강남역", "역삼역", "남부터미널역", "양재역", "양재시민의숲역", "매봉역"};
     private GraphRepository graphRepository;
-
+    private Setup setup;
     public MainController() {
         init();
         graphRepository = new GraphRepository();
     }
 
     private void init() {
-        for(String name : stationNames) {
-            StationRepository.addStation(new Station(name));
-        }
+        setup = new Setup();
+        setup.setup();
     }
 
     public void start() {
